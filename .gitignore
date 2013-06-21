@@ -1,0 +1,14 @@
+build
+autom4te.cache
+.DS_Store
+trexdb
+missing
+*.log
+aclocal.*
+configure.scan
+depcomp
+install-sh
+*.in
+configure
+src/Makefile.in
+deps/v8/build
