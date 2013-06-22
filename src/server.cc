@@ -16,6 +16,7 @@
 using namespace std;
 
 #define MAX_OPTIONS 1
+#define SCRIPT_TIMEOUT 10
 
 static int exit_flag;
 static void signal_handler(int sig_num) {
@@ -95,12 +96,13 @@ void checkScripts(){
     for (map<long,time_t>::iterator it=threadHandlerTime.begin(); it!=threadHandlerTime.end(); ++it){
         long threadId = it->first;
         time_t handleStart = it->second;
-        if((handleStart > 0) && ((now - (handleStart)) > 10)){
-            cout << "TERMINATE" << endl << flush;
-            // Trex::Runtime* threadRuntime = Trex::Runtime::instance();
-            // //threadRuntime->terminateExecution();
-            // threadHandlerTime[threadId] = -1;
-            // Trex::Runtime::killRuntime(threadId, threadRuntime);
+        if((handleStart > 0) && ((now - (handleStart)) > SCRIPT_TIMEOUT)){
+            Trex::Runtime* threadRuntime = Trex::Runtime::instanceForThreadId(threadId);
+            if(threadRuntime!=NULL){
+                threadRuntime->terminateExecution();
+            }
+            threadHandlerTime[threadId] = -1;
+            
         }
     }
 }

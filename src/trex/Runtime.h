@@ -24,13 +24,13 @@ namespace Trex {
 			static void restart();
 			static void killRuntime(long threadId, Runtime* runtime);
 			static Runtime* instance();
+			static Runtime* instanceForThreadId(long threadId);
 			static void cleanup();
 	    Response* handle(Request* request);
 	    bool isBusy();
 	    void stopRuntime();
 	    void terminateExecution();
 	    bool shouldStop();
-	    Isolate* getIsolate();
 	    explicit Runtime();
 	    virtual ~Runtime();
 	protected:

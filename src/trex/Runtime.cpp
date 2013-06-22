@@ -234,6 +234,16 @@ namespace Trex {
         return runtime;
     }
 
+    Runtime* Runtime::instanceForThreadId(long threadId){
+        map<long, Runtime*>::iterator it;
+        it = runtimes.find(threadId);
+        Runtime* runtime = NULL;
+        if(it!=runtimes.end()){
+            runtime = it->second;
+        }
+        return runtime;
+    }
+
     void Runtime::cleanup(){
         map<long, Runtime*>::iterator it;
         for (map<long, Runtime*>::iterator it=runtimes.begin(); it!=runtimes.end(); ++it){
@@ -255,19 +265,8 @@ namespace Trex {
         return stop;
     }
 
-static void DebugMessageHandler() {
-  cout << "handler" << endl << flush;
-}
-
     void Runtime::terminateExecution(){
-        v8::Locker v8ThreadLock(isolate);
-        v8::Isolate::Scope isolate_scope(isolate);
-        v8::Debug::SetDebugMessageDispatchHandler(DebugMessageHandler);
-        v8::Debug::DebugBreak(isolate);
-    }
-
-    Isolate* Runtime::getIsolate(){
-        return isolate;
+        v8::V8::TerminateExecution(isolate);
     }
 
     Response* Runtime::handle(Request* Request){
@@ -315,15 +314,19 @@ static void DebugMessageHandler() {
             Handle<Function> handle_function = Handle<Function>::Cast(handle_value);
             Handle<Value> responseValue;
 
+            v8::Locker::StartPreemption(1000);
+
             Handle<Value> argv[1] = {pagetable};
             responseValue = handle_function->Call(context->Global(), 1, argv);
+
+            v8::Locker::StopPreemption();
 
             if(responseValue.IsEmpty()){
                 assert(try_catch.HasCaught());
                 // Print errors that happened during execution.
                 if (report_exceptions)
                     ReportException(&try_catch);
-                response = new Response(500, string(""), map<string,string>());
+                response = new Response(500, string("<html><head><title>Timeout</title></head><body><h1>Timeout</h1><p>Couldn't handle your request because it timed out.</p></body></html>"), map<string,string>());
             }else{
                 assert(!try_catch.HasCaught());
                 Handle<Object> o = responseValue->ToObject();
