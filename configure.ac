@@ -5,7 +5,6 @@ AC_PREREQ([2.69])
 AC_INIT([trex], [0.86], [kyle.shank@gmail.com])
 AM_INIT_AUTOMAKE([trex], [0.86])
 AC_CONFIG_SRCDIR([src/server.cc])
-AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_CXX
