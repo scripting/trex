@@ -13,19 +13,19 @@ mkdir -p build
 mkdir -p usr
 mkdir -p usr/lib
 
-trexlibdir=${trexdir}/deps/usr
+trexoutdir=${trexdir}/deps/usr
 
 echo "Building v8"
 mkdir -p "${trexdir}/deps/build/v8"
 cd "${trexdir}/deps/v8"
 make dependencies
 make OUTDIR=../build/v8 library=shared native
-cp ../build/v8/native/libv8.* ${trexlibdir}/lib/
+cp ../build/v8/native/libv8.* ${trexoutdir}/lib/
 
 echo "Building curl"
 cd "${trexdir}/deps/curl"
 ./buildconf
-${trexdir}/deps/curl/configure --prefix=${trexlibdir}
+${trexdir}/deps/curl/configure --prefix=${trexoutdir}
 make
 make install
 
@@ -33,7 +33,7 @@ echo "Building leveldb"
 cd "${trexdir}/deps/leveldb"
 make
 mkdir -p "${trexdir}/deps/build/leveldb"
-cp libleveldb.* ${trexlibdir}/lib/
+cp libleveldb.* ${trexoutdir}/lib/
 
 echo "Building libxml2"
 cd "${trexdir}/deps/libxml2"
@@ -41,7 +41,7 @@ autoconf
 automake --add-missing
 mkdir -p "${trexdir}/deps/build/libxml2"
 cd "${trexdir}/deps/build/libxml2"
-${trexdir}/deps/libxml2/configure --with-threads --prefix=${trexlibdir}
+${trexdir}/deps/libxml2/configure --with-threads --prefix=${trexoutdir}
 make
 make install
 
@@ -51,7 +51,7 @@ autoconf
 automake --add-missing
 mkdir -p "${trexdir}/deps/build/libxslt"
 cd "${trexdir}/deps/build/libxslt"
-${trexdir}/deps/libxslt/configure --prefix=${trexlibdir}
+${trexdir}/deps/libxslt/configure --prefix=${trexoutdir}
 make
 make install
 
@@ -69,10 +69,10 @@ automake --add-missing
 
 echo "Running configure..."
 cd "${trexdir}/build"
-../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexdir}/deps/build/leveldb -L${trexdir}/deps/build/libxml2/out -L${trexdir}/deps/build/libxslt/out -L${trexdir}/deps/build/v8/native -L${trexdir}/deps/curl/lib/.lib"
+../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexoutdir}/lib"
 
 echo "Running make..."
 make
 
 echo "When running Trex set LD_LIBRARY_PATH to:"
-echo "LD_LIBRARY_PATH=${trexdir}/deps/usr/lib"
+echo "LD_LIBRARY_PATH=${trexoutdir}/lib"
