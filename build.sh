@@ -26,6 +26,12 @@ cd "${trexdir}/deps/v8"
 make OUTDIR=../build/v8 dependencies
 make OUTDIR=../build/v8 library=shared native
 
+echo "Building curl"
+cd "${trexdir}/deps/curl"
+./buildconf
+${trexdir}/deps/curl/configure
+make
+
 echo "Building leveldb"
 cd "${trexdir}/deps/leveldb"
 make
@@ -46,7 +52,7 @@ make
 
 echo "Running configure..."
 cd "${trexdir}/build"
-../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexdir}/deps/build/leveldb -L${trexdir}/deps/build/libxml2 -L${trexdir}/deps/build/libxslt/libxslt -L${trexdir}/deps/build/v8/native"
+../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexdir}/deps/build/leveldb -L${trexdir}/deps/build/libxml2 -L${trexdir}/deps/build/libxslt/libxslt -L${trexdir}/deps/build/v8/native -L${trexdir}/deps/curl/lib"
 
 echo "Running make..."
 make
