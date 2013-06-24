@@ -15,7 +15,7 @@ cd build
 echo "Building v8"
 mkdir -p "${trexdir}/deps/build/v8"
 cd "${trexdir}/deps/v8"
-make OUTDIR=../build/v8 dependencies
+make dependencies
 make OUTDIR=../build/v8 library=shared native
 
 echo "Building curl"
@@ -51,6 +51,9 @@ make
 echo "Building Trex..."
 cd "${trexdir}"
 
+echo "Running aclocal..."
+aclocal
+
 echo "Running autoconf..."
 autoconf
 
@@ -63,3 +66,6 @@ cd "${trexdir}/build"
 
 echo "Running make..."
 make
+
+echo "When running Trex set LD_LIBRARY_PATH to:"
+echo "LD_LIBRARY_PATH=${trexdir}/deps/build/leveldb:${trexdir}/deps/build/libxml2:${trexdir}/deps/build/libxslt/libxslt:${trexdir}/deps/build/v8/native:${trexdir}/deps/curl/lib/.lib:/usr/lib:/usr/local/lib"
