@@ -25,3 +25,7 @@ py-compile
 test-driver
 texinfo.tex
 ylwrap
+deps/libxslt/python/libxslt-export.c
+deps/libxslt/python/libxslt-py.h
+deps/libxslt/python/libxsltclass.py
+deps/libxslt/python/libxsltclass.txt

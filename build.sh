@@ -49,16 +49,17 @@ ${trexdir}/deps/libxslt/configure
 make
 
 echo "Building Trex..."
-
-echo "Running configure..."
-cd "${trexdir}/build"
-../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexdir}/deps/build/leveldb -L${trexdir}/deps/build/libxml2 -L${trexdir}/deps/build/libxslt/libxslt -L${trexdir}/deps/build/v8/native -L${trexdir}/deps/curl/lib"
+cd "${trexdir}"
 
 echo "Running autoconf..."
 autoconf
 
 echo "Running automake..."
 automake --add-missing
+
+echo "Running configure..."
+cd "${trexdir}/build"
+../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexdir}/deps/build/leveldb -L${trexdir}/deps/build/libxml2 -L${trexdir}/deps/build/libxslt/libxslt -L${trexdir}/deps/build/v8/native -L${trexdir}/deps/curl/lib/.lib"
 
 echo "Running make..."
 make
