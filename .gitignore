@@ -7,6 +7,5 @@ missing
 aclocal.*
 configure.scan
 depcomp
-*.in
 src/Makefile.in
 deps/v8/build
