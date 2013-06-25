@@ -77,7 +77,11 @@ namespace Trex{
 			        /* specify URL to get */
 			        curl_easy_setopt(curl, CURLOPT_URL, *value);
 			        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-			        
+
+							string trexDir(getenv("TREX_DIR"));
+							trexDir.append("/deps/cacert.pem");
+			        curl_easy_setopt (curl, CURLOPT_CAINFO, trexDir.c_str());
+
 			        struct curl_slist *headerList=NULL;
 			        
 			        /* headers */
@@ -194,6 +198,10 @@ namespace Trex{
 			        /* specify URL to get */
 			        curl_easy_setopt(curl, CURLOPT_URL, *value);
 			        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+			        string trexDir(getenv("TREX_DIR"));
+							trexDir.append("/deps/cacert.pem");
+			        curl_easy_setopt (curl, CURLOPT_CAINFO, trexDir.c_str());
 			        
 			        struct curl_slist *headerList=NULL;
 			        
@@ -328,6 +336,10 @@ namespace Trex{
 			        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 			        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 			        
+			        string trexDir(getenv("TREX_DIR"));
+							trexDir.append("/deps/cacert.pem");
+			        curl_easy_setopt (curl, CURLOPT_CAINFO, trexDir.c_str());
+
 			        struct curl_slist *headerList=NULL;
 			        
 			        /* headers */

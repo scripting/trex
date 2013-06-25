@@ -25,7 +25,7 @@ cp ../build/v8/native/libv8.* ${trexoutdir}/lib/
 echo "Building curl"
 cd "${trexdir}/deps/curl"
 ./buildconf
-${trexdir}/deps/curl/configure --prefix=${trexoutdir}
+${trexdir}/deps/curl/configure --with-ssl --prefix=${trexoutdir}
 make
 make install
 
