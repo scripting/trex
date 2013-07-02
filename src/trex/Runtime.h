@@ -19,6 +19,7 @@ namespace Trex {
 	    bool busy;
 	    bool stop;
 	    void ReportException(v8::TryCatch* try_catch);
+
 	public:
 		  bool compileError;
 			static void restart();
@@ -33,6 +34,7 @@ namespace Trex {
 	    bool shouldStop();
 	    explicit Runtime();
 	    virtual ~Runtime();
+	    void gc();
 	protected:
 			
 	};

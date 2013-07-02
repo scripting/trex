@@ -39,10 +39,6 @@ static int begin_request_handler(struct mg_connection *conn) {
     Trex::Response* response = handler->process(request);
 
     threadHandlerTime[threadId] = -1;
-    
-    if(threadRuntime->shouldStop()){
-        Trex::Runtime::killRuntime(threadId, threadRuntime);
-    }
 
     string headers;
     map<string,string> trexHeaders = response->headers();
@@ -60,6 +56,10 @@ static int begin_request_handler(struct mg_connection *conn) {
               "\r\n"
               "%s",
               response->code(), headers.c_str(), response->body().c_str());
+
+    if(threadRuntime->shouldStop()){
+        Trex::Runtime::killRuntime(threadId, threadRuntime);
+    }
     
     delete response;
     delete handler;

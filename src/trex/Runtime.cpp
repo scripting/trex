@@ -184,8 +184,7 @@ namespace Trex {
     }
 
     Runtime::~Runtime(){
-        // Collect Garbage
-        while(!V8::IdleNotification()) {};
+        gc();
         {
             v8::Isolate::Scope isolate_scope(isolate);
             v8::Locker v8ThreadLock(isolate);
@@ -195,6 +194,11 @@ namespace Trex {
             delete isolate->GetData();
         }
         isolate->Dispose();
+    }
+
+    void Runtime::gc(){
+        // Collect Garbage
+        while(!V8::IdleNotification()) {};
     }
 
     static map<long, Runtime*> runtimes;
