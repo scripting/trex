@@ -17,6 +17,8 @@ using namespace std;
 
 #define MAX_OPTIONS 1
 
+char processPath[PATH_MAX];
+
 static int exit_flag;
 static void signal_handler(int sig_num) {
   exit_flag = sig_num;
@@ -24,6 +26,8 @@ static void signal_handler(int sig_num) {
 
 static time_t lastRequest = 0;
 static map<long,time_t> threadHandlerTime;
+struct mg_context *ctx;
+struct mg_callbacks callbacks;
 
 static int begin_request_handler(struct mg_connection *conn) {
     long threadId = (long)pthread_self();
@@ -105,6 +109,14 @@ void checkScripts(){
         }
     }
 }
+extern char **environ;
+void restartProcess(){
+    cout << ">>>RESTARTING TREX<<<" << endl << flush;
+    mg_stop(ctx);
+    delete Trex::Db::instance();
+    char *argv[] = { processPath, getenv("TREX_OPML"), 0 };
+    execve(argv[0], &argv[0], environ);
+}
 
 void checkOPML(){
     time_t now = std::time(NULL);
@@ -154,8 +166,9 @@ void checkOPML(){
                             if(!firstTime){
                                 Trex::Runtime* testRuntime = new Trex::Runtime();
                                 if(!testRuntime->compileError){
-                                    xml_memory_used = xmlMemUsed();
-                                    Trex::Runtime::restart();
+                                    restartProcess();
+                                    // xml_memory_used = xmlMemUsed();
+                                    // Trex::Runtime::restart();
                                 }
                                 delete testRuntime;
                             }
@@ -252,6 +265,8 @@ char* xmlMemoryStrdupWrap(const char* str)
 }
 
 int main(int argc, char **argv) {
+    realpath (argv[0], processPath);
+
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
 
@@ -290,9 +305,6 @@ int main(int argc, char **argv) {
     curl_global_init(CURL_GLOBAL_ALL);
     
     v8::V8::SetFlagsFromString("--harmony", 9);
-
-    struct mg_context *ctx;
-    struct mg_callbacks callbacks;
     
     char* port;
     port = getenv("TREX_PORT");
