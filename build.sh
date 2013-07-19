@@ -21,6 +21,7 @@ cd "${trexdir}/deps/v8"
 make dependencies
 make OUTDIR=../build/v8 library=shared native
 cp ../build/v8/native/libv8.* ${trexoutdir}/lib/
+cp ../build/v8/native/lib.target/libv8.* ${trexoutdir}/lib/
 
 echo "Building curl"
 cd "${trexdir}/deps/curl"
@@ -37,8 +38,7 @@ cp libleveldb.* ${trexoutdir}/lib/
 
 echo "Building libxml2"
 cd "${trexdir}/deps/libxml2"
-autoconf
-automake --add-missing
+autoreconf -i
 mkdir -p "${trexdir}/deps/build/libxml2"
 cd "${trexdir}/deps/build/libxml2"
 ${trexdir}/deps/libxml2/configure --with-threads --prefix=${trexoutdir}
@@ -47,8 +47,7 @@ make install
 
 echo "Building libxslt"
 cd "${trexdir}/deps/libxslt"
-autoconf
-automake --add-missing
+autoreconf -i
 mkdir -p "${trexdir}/deps/build/libxslt"
 cd "${trexdir}/deps/build/libxslt"
 ${trexdir}/deps/libxslt/configure --prefix=${trexoutdir}
