@@ -4,7 +4,9 @@ Setup new 1GB VPS with Ubuntu 13.04 x64
 
 Point a domain name at it as well as a wildcard subdomain.
 
-In these instructions I use the domain "example.com" and have logged into my server as root.  If you're logged in as another use you may need to use `sudo`.
+In these instructions I use the domain "example.com" and have logged into my server as root.  
+
+If you're logged in as another use you may need to use `sudo`.
 
 ```
 apt-get update
