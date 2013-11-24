@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 trexdir=$PWD
 
@@ -16,12 +16,24 @@ mkdir -p usr/lib
 trexoutdir=${trexdir}/deps/usr
 
 echo "Building v8"
+
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+	echo "Using clang"
+	export CC=/usr/bin/clang
+	export CXX=/usr/bin/clang++
+	export GYP_DEFINES="clang=1"
+fi
+
 mkdir -p "${trexdir}/deps/build/v8"
 cd "${trexdir}/deps/v8"
 make dependencies
 make OUTDIR=../build/v8 library=shared native
-cp ../build/v8/native/libv8.* ${trexoutdir}/lib/
-cp ../build/v8/native/lib.target/libv8.* ${trexoutdir}/lib/
+cp ../build/v8/native/libv8* ${trexoutdir}/lib/
+
+
+if [[ "$OSTYPE" =~ linux ]]; then
+    cp ../build/v8/native/lib.target/libv8.* ${trexoutdir}/lib/
+fi
 
 echo "Building curl"
 cd "${trexdir}/deps/curl"
@@ -73,5 +85,10 @@ cd "${trexdir}/build"
 echo "Running make..."
 make
 
-echo "When running Trex set LD_LIBRARY_PATH to:"
-echo "LD_LIBRARY_PATH=${trexoutdir}/lib"
+if [[ "$OSTYPE" =~ ^darwin ]]; then
+    echo "When running Trex set DYLD_LIBRARY_PATH to:"
+    echo "DYLD_LIBRARY_PATH=${trexoutdir}/lib"
+else
+    echo "When running Trex set LD_LIBRARY_PATH to:"
+    echo "LD_LIBRARY_PATH=${trexoutdir}/lib"
+fi
