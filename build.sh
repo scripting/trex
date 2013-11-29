@@ -48,6 +48,7 @@ make
 mkdir -p "${trexdir}/deps/build/leveldb"
 cp libleveldb.* ${trexoutdir}/lib/
 
+if [[ "$OSTYPE" =~ linux ]]; then
 echo "Building libxml2"
 cd "${trexdir}/deps/libxml2"
 autoreconf -i
@@ -56,6 +57,16 @@ cd "${trexdir}/deps/build/libxml2"
 ${trexdir}/deps/libxml2/configure --with-threads --prefix=${trexoutdir}
 make
 make install
+
+libxmlinclude="-I${trexdir}/deps/libxml2/include"
+libxmllib=
+
+else
+echo "Skipping libxml2 build - using homebrew version"
+libxmlinclude="-I/usr/local/opt/libxml2/include/libxml2" 
+libxmllib="-L/usr/local/opt/libxml2/lib"
+fi
+
 
 echo "Building libxslt"
 cd "${trexdir}/deps/libxslt"
@@ -80,7 +91,7 @@ automake --add-missing
 
 echo "Running configure..."
 cd "${trexdir}/build"
-../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include -I${trexdir}/deps/libxml2/include -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexoutdir}/lib"
+../configure CXXFLAGS="-I${trexdir}/deps/v8/src -I${trexdir}/deps/curl/include -I${trexdir}/deps/leveldb/include ${libxmlinclude} -I${trexdir}/deps/libxslt/libxslt" LDFLAGS="-L${trexoutdir}/lib ${libxmllib}"
 
 echo "Running make..."
 make
